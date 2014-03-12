@@ -10,11 +10,15 @@ In this tutorial an Asus XTion RGBD camera is used. The ROS driver is located in
 
 #### 1.1.  Run the driver
 
-To start the driver, run in a new terminal
+To start the driver for the new Asus sensors, run in a new terminal
+```
+roslaunch openni2_launch openni2.launch
+```
+To start the driver for the older Asus sensors and MS Kinects, run in a new terminal
 ```
 roslaunch openni_launch openni.launch
 ```
-To see the output topics, type
+To see the output topics, type in a new terminal
 ```
 rostopic list
 ```
@@ -22,17 +26,19 @@ You should see a lot of topics starting with /camera/.
 
 #### 1.2.  Visualize the camera data in RVIZ
 
-To open rviz, run
+To open rviz, run (in the same terminal as "rostopic list")
 ```
 rosrun rviz rviz -d plain.rviz
 ```
 ![rviz1](./doc/rviz1.png "Plain RVIZ")
 
-Click on "Add" and select "PointCloud2":
+Click on "Add" (lower left in Displays panel) and select "PointCloud2":
 
 ![rviz2](./doc/rviz2.png "Add PointCloud")
 
-In "Displays->PointCloud2", select the topic "/camera/depth_registered/points". You will probably see no point cloud but an error message:
+For new Asus, in "Displays->PointCloud2", select the topic "/camera/depth/points_xyzrgb". 
+For older models, in "Displays->PointCloud2", select the topic "/camera/depth_registered/points". 
+You will probably see no point cloud but an error message:
 
 ![rviz3](./doc/rviz3.png "Error PointCloud")
 
@@ -91,7 +97,7 @@ and check the launch file
 ```
 gedit launch/passthrough_filter.launch
 ```
-You can observe, that the line <remap from="point_cloud_in" to="/camera/depth_registered/points"/> remaps the input topic to the colored point cloud of the openni node. Also, you can see the default values for the parameters. Use the command
+You can observe, that the line <remap from="point_cloud_in" to="/camera/depth_registered/points"/> remaps the input topic to the colored point cloud of the openni node. For the new driver, you will need to change this to <remap from="point_cloud_in" to="/camera/depth/points_xyzrbg"/>.  Also, you can see the default values for the parameters. Use the command
 ```
 roslaunch pcl_tutorial passthrough_filter.launch
 ```
@@ -129,7 +135,10 @@ In RVIZ, click on "Add" and select "Marker":
 ![rviz5](./doc/rviz5.png "Add marker")
 
 Change the marker topic to "/plane_segmentation/marker_plane". You should see a rectangle for the plane now.
-You can also show the plane parameters (normal, centroid) by add a second marker display and subscribing to "/plane_segmentation/marker_params":
+You can also show the plane parameters (normal, centroid). 
+In RVIZ, click on "Add" and select "Marker". Display and subscribe to "/plane_segmentation/marker_params":
+
+Additionally you can visualize the point cloud of points considered above the plane segmentation. This is the most useful way to visualize the effects of the plane parameters. 
 
 ![rviz6](./doc/rviz6.png "Plane marker")
 
@@ -189,7 +198,7 @@ bool mesh_use_embedded_materials
 
 #### 3.4.  Configure parameters
 
-There are two parameters you can modify using dynamic reconfigure. "dist_thresh" specifies, at which ditance from the plane 
+Make sure to shut down the rqt_reconfigure node and restart it. There are two parameters you can modify using dynamic reconfigure. "dist_thresh" specifies, at which ditance from the plane 
 model a point is still considered an inlier. Adjust it until the plane is segmented correctly (i.e. only points actually belonging
 to the ground floor are part of the plane). The parameter "max_iterations" improves the segmentation robustness but lowers computation speed if increased.
 
@@ -222,3 +231,5 @@ You can change the leaf size parameter of the node using dynamic reconfigure. Th
 
 In console, observe the computation time of the plane segmentation if you change the parameters of the voxel filter.
 Also, visualize the downsampled point cloud (/voxel_filter/point_cloud_out) in RVIZ.
+
+
