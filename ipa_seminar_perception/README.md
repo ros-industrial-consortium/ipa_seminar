@@ -30,6 +30,8 @@ To open rviz, run (in the same terminal as "rostopic list")
 ```
 rosrun rviz rviz -d plain.rviz
 ```
+The instruction "-d plain.rviz" creates a configuration file named plain.rviz (which could be named anything.rviz) which will hold the Rviz settings that you change as you go through this tutorial. The next time you run rviz with -d plain.rviz, you will see the same displays that you had the last time you closed rviz. 
+
 ![rviz1](./doc/rviz1.png "Plain RVIZ")
 
 Click on "Add" (lower left in Displays panel) and select "PointCloud2":
@@ -97,11 +99,11 @@ and check the launch file
 ```
 gedit launch/passthrough_filter.launch
 ```
-You can observe, that the line <remap from="point_cloud_in" to="/camera/depth_registered/points"/> remaps the input topic to the colored point cloud of the openni node. For the new driver, you will need to change this to <remap from="point_cloud_in" to="/camera/depth/points_xyzrbg"/>.  Also, you can see the default values for the parameters. Use the command
+You can observe, that the line: remap from="point\_cloud\_in" to="/camera/depth\_registered/points", remaps the input topic to the colored point cloud of the openni node. For the new driver, you will need to change this to: remap from="point\_cloud\_in" to="/camera/depth/points_xyzrbg". Also, you can see the default values for the parameters. Use the command
 ```
 roslaunch pcl_tutorial passthrough_filter.launch
 ```
-to run the filter. In RVIZ, you can add a second PointCloud2 display and set the topic name to "/passthrough_filter/point_cloud_out".
+to run the filter. In RVIZ, you can add a second PointCloud2 display and set the topic name to "/passthrough__filter/point\_cloud_out".
 Now you can see how the filter works.
 
 #### 2.2.  Configure parameters
@@ -125,7 +127,7 @@ finds the dominant plane regardless how the scene looks. Type
 roslaunch pcl_tutorial plane_segmentation.launch
 ```
 in a new terminal. The node will output markers for the centroid, the normal and the surface of the plane.
-It will also output the inliers of the plane (/plane_segmentation/plane) and the remainder of the scene (/plane_segmentation/above_plane) as point cloud.
+It will also output the inliers of the plane (/plane\_segmentation/plane) and the remainder of the scene (/plane\_segmentation/above\_plane) as point cloud.
 Use RVIZ to observe an compare the two output point clouds.
 
 #### 3.2. Visualize the marker
@@ -138,11 +140,11 @@ Change the marker topic to "/plane_segmentation/marker_plane". You should see a 
 You can also show the plane parameters (normal, centroid). 
 In RVIZ, click on "Add" and select "Marker". Display and subscribe to "/plane_segmentation/marker_params":
 
-Additionally you can visualize the point cloud of points considered above the plane segmentation. This is the most useful way to visualize the effects of the plane parameters. 
+Additionally you should visualize the point cloud of points considered above the plane segmentation (/plane_segmentation/above_plane). This is the most useful way to visualize the effects of the plane parameters. 
 
 ![rviz6](./doc/rviz6.png "Plane marker")
 
-Now you can move the camera and take a look on the results in RVIZ. Keep in mind that the algorithm always segments the dominant plane
+Now you can move the camera and take a look on the results in RVIZ. Keep in mind that the algorithm always segments the dominant plane.
 
 #### 3.3.  Marker message
 
